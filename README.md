@@ -93,29 +93,39 @@ for result in result_os.split('\n'):
 
 import os
 import sys
+import socket
 
-command = "nslookup "
 url = sys.argv[1]
-answers = os.popen(command + url)
-answers = answers.read().split("\n")
+ip = socket.gethostbyname(url)
+entry= 0
 
-f = open('bd.txt', 'r')
+print("Текущий IP проверки сервиса " + url + " - " + ip)
 
-old_ips = f.readlines()
 
-f.close()
+with open('bdn.txt', 'r+') as f:
+    data = f.readlines()
+    old_ips = ""
 
-f = open('bd.txt', 'a+')
+    if len(data) == 0:
+        print("БД пустая, пишем")
+        f.write(url + " - " + ip + "\n")
+        exit()
 
-for answer in answers:
-    answer.replace("\t", "")
-    if answer.find("Address") != -1 and answer.find("127.0.0") == -1:
-        if (answer + '\n') in old_ips:
-            print('Ip адрес ресурса ' + url + (' ') + answer + ' прежний, можно работать')
+    for d in data:
+        find = d.find(ip)
+        entry += 1
+        old_ips += d
+
+        if find != -1:
+            print("Доступность сервиса " + url + " с ip " + ip + " прежняя")
+            break
+        elif entry == len(data): # or entry== 0:
+            print("Такого адреса нет в бд, записываю")
+            print("[ERROR] " + url + " IP mismatch: " + ip + "\nСтарые IP: " + old_ips)
+            f.write(url + " - " + ip + "\n")
         else:
-            print('ERROR Внимание! IP адрес ресурса ' + url + ' изменился! В БД добвален новый адрес: ' + answer)
-            f.write(answer + '\n')
-f.close()
+            continue
+
 ```
 
 Вывод скрипта при запуске при тестировании:
