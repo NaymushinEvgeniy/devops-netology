@@ -121,7 +121,7 @@ with open('bdn.txt', 'r+') as f:
             break
         elif entry == len(data): # or entry== 0:
             print("Такого адреса нет в бд, записываю")
-            print("[ERROR] " + url + " IP mismatch: " + ip + "\nСтарые IP: " + old_ips)
+            print("[ERROR] " + url + " IP mismatch: " + ip + "\nСтарые IP: \n" + old_ips)
             f.write(url + " - " + ip + "\n")
         else:
             continue
@@ -129,15 +129,21 @@ with open('bdn.txt', 'r+') as f:
 ```
 
 Вывод скрипта при запуске при тестировании:
+Если адрес изменился:
 ```python
-Ip адрес ресурса google.com Address: 74.125.205.100 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.102 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.101 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.139 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.113 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.138 прежний, можно работать
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::66
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::8a
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::8b
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05:
+Текущий IP проверки сервиса google.com - 172.217.5.14
+Такого адреса нет в бд, записываю
+[ERROR] google.com IP mismatch: 172.217.5.14
+Старые IP: 
+google.com - 142.250.191.206
+google.com - 142.250.190.46
+google.com - 142.250.190.78
+google.com - 142.250.190.142
+```
+
+
+Если адрес не менялся:
+```python
+Текущий IP проверки сервиса google.com - 172.217.5.14
+Доступность сервиса google.com с ip 172.217.5.14 прежняя
 ```
