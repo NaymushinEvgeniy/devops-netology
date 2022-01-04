@@ -1,133 +1,91 @@
-# Домашнее задание к занятию "4.2. Использование Python для решения типовых DevOps задач"
+# Домашнее задание к занятию "4.3. Языки разметки JSON и YAML"
 
 ### Обязательная задача 1.
-Есть скрипт:
-```python
-#!/usr/bin/env python3
-a = 1
-b = '2'
-c = a + b
+Мы выгрузили JSON, который получили через API запрос к нашему сервису:
+```json
+{ "info" : "Sample JSON output from our service\t",
+        "elements" :[
+            { "name" : "first",
+            "type" : "server",
+            "ip" : 7175 
+            }
+            { "name" : "second",
+            "type" : "proxy",
+            "ip : 71.78.22.43
+            }
+        ]
+    }
 ```
 
-#### Вопросы:
-Вопрос | Ответ
---- |-------|
-Какое значение будет присвоено переменной c? | 'c' is not defined - нельзя складывать явно указанные разнотипные переменные
-Как получить для переменной c значение 12? | Явно указать тип для значения переменной a = '1', или взять значение функции a=str(a)
-Как получить для переменной c значение 3? | Явно указать тип для значения переменной b = 2, или взять значение функции b=int(b)
+Нужно найти и исправить все ошибки, которые допускает наш сервис
+
+Решение: 
+```json
+{ "info" : "Sample JSON output from our service\t",
+        "elements" : [
+            { "name" : "first",
+            "type" : "server",
+            "ip" : 7175
+            },
+            { "name" : "second",
+            "type" : "proxy",
+            "ip" : "71.78.22.43"
+            }
+        ]
+    }
+```
 
 ### Обязательная задача 2.
-Мы устроились на работу в компанию, где раньше уже был DevOps Engineer. Он написал скрипт, позволяющий узнать, какие файлы модифицированы в репозитории, относительно локальных изменений. Этим скриптом недовольно начальство, потому что в его выводе есть не все изменённые файлы, а также непонятен полный путь к директории, где они находятся. Как можно доработать скрипт ниже, чтобы он исполнял требования вашего руководителя?
-
-```python
-#!/usr/bin/env python3
-
-import os
-
-bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
-result_os = os.popen(' && '.join(bash_command)).read()
-is_change = False
-for result in result_os.split('\n'):
-    if result.find('modified') != -1:
-        prepare_result = result.replace('\tmodified:   ', '')
-        print(prepare_result)
-        break
-```
-
-Скрипт:
-```python
-#!/usr/bin/env python3
-
-import os
-
-bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
-result_os = os.popen(' && '.join(bash_command)).read()
-home_path = os.getcwd()
-is_change = False
-for result in result_os.split('\n'):
-    if result.find('modified') != -1:
-        prepare_result = result.replace('\tmodified:   ', '')
-        path = bash_command[0].replace('"', '')
-        print(home_path + path.replace('cd ~', '') + '/' + prepare_result)
-```
-
-Вывод скрипта при запуске и тестировании:
-```python
-/root/netology/sysadm-homeworks/one.txt
-/root/netology/sysadm-homeworks/tree.txt
-/root/netology/sysadm-homeworks/two.txt
-```
-
-### Обязательная задача 3
-Доработать скрипт выше так, чтобы он мог проверять не только локальный репозиторий в текущей директории, а также умел воспринимать путь к репозиторию, который мы передаём как входной параметр. Мы точно знаем, что начальство коварное и будет проверять работу этого скрипта в директориях, которые не являются локальными репозиториями.  
-
-Скрипт:
-```python
-#!/usr/bin/env python3
-
-import os
-from sys import argv
-
-path = argv
-home_path = os.getcwd()
-
-if len(path) == 1:
-    print("Не задан путь к реопзиторию!")
-    exit()
-
-bash_command = ["cd " + home_path + path[1], "git status"]
-result_os = os.popen(' && '.join(bash_command)).read()
-is_change = False
-
-for result in result_os.split('\n'):
-    if result.find('modified') != -1:
-        prepare_result = result.replace('\tmodified:   ', '')
-        print(home_path + path[1] + '/' + prepare_result)
-```
-
-### Обязательная задача 4
-Наша команда разрабатывает несколько веб-сервисов, доступных по http. Мы точно знаем, что на их стенде нет никакой балансировки, кластеризации, за DNS прячется конкретный IP сервера, где установлен сервис. Проблема в том, что отдел, занимающийся нашей инфраструктурой очень часто меняет нам сервера, поэтому IP меняются примерно раз в неделю, при этом сервисы сохраняют за собой DNS имена. Это бы совсем никого не беспокоило, если бы несколько раз сервера не уезжали в такой сегмент сети нашей компании, который недоступен для разработчиков. Мы хотим написать скрипт, который опрашивает веб-сервисы, получает их IP, выводит информацию в стандартный вывод в виде: <URL сервиса> - <его IP>. Также, должна быть реализована возможность проверки текущего IP сервиса c его IP из предыдущей проверки. Если проверка будет провалена - оповестить об этом в стандартный вывод сообщением: [ERROR] <URL сервиса> IP mismatch: <старый IP> <Новый IP>. Будем считать, что наша разработка реализовала сервисы: drive.google.com, mail.google.com, google.com.
-
+В прошлый рабочий день мы создавали скрипт, позволяющий опрашивать веб-сервисы и получать их IP. К уже реализованному функционалу нам нужно добавить возможность записи JSON и YAML файлов, описывающих наши сервисы. Формат записи JSON по одному сервису: { "имя сервиса" : "его IP"}. Формат записи YAML по одному сервису: - имя сервиса: его IP. Если в момент исполнения скрипта меняется IP у сервиса - он должен так же поменяться в yml и json файле.
+Ваш скрипт:
 ```python
 #!/usr/bin/env python3
 
 import os
 import sys
+import socket
+import json
 
-command = "nslookup "
 url = sys.argv[1]
-answers = os.popen(command + url)
-answers = answers.read().split("\n")
+ip = socket.gethostbyname(url)
+ips = []
 
-f = open('bd.txt', 'r')
+# Формирование структуры JSON
+data = { "url" : url, "ip" : ips }
 
-old_ips = f.readlines()
+# Вспомогательная функция поиска в списке IP-адресов
+def find_in_json (set_ip, list_json):
+    if set_ip not in list_json:
+        list_json.append(set_ip)
 
-f.close()
+# Работа скрипта
 
-f = open('bd.txt', 'a+')
+print("Текущий IP проверки сервиса " + url + " - " + ip)
 
-for answer in answers:
-    answer.replace("\t", "")
-    if answer.find("Address") != -1 and answer.find("127.0.0") == -1:
-        if (answer + '\n') in old_ips:
-            print('Ip адрес ресурса ' + url + (' ') + answer + ' прежний, можно работать')
-        else:
-            print('ERROR Внимание! IP адрес ресурса ' + url + ' изменился! В БД добвален новый адрес: ' + answer)
-            f.write(answer + '\n')
-f.close()
+# Проверяем наличие БД, если ее нет - создаем
+with open("bdn.json", "r+") as f:
+    content = f.readlines()
+    if len(content) == 0:
+        json.dump(data, f)
+
+# Считываем данные из текущей БД, проверяем на наличие
+with open("bdn.json", "r") as f:
+    content = json.load(f)
+    list_json = content["ip"]
+    find_in_json(ip, list_json)
+
+# Записываем в БД все изменения
+with open('bdn.json', 'w') as f:
+    json.dump(content, f)
+
+```
+Вывод скрипта при запуске при тестировании:
+
+```python
+Текущий IP проверки сервиса google.com - 142.250.190.78
 ```
 
-Вывод скрипта при запуске при тестировании:
-```python
-Ip адрес ресурса google.com Address: 74.125.205.100 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.102 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.101 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.139 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.113 прежний, можно работать
-Ip адрес ресурса google.com Address: 74.125.205.138 прежний, можно работать
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::66
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::8a
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05::8b
-ERROR Внимание! IP адрес ресурса google.com изменился! В БД добвален новый адрес: Address: 2a00:1450:4010:c05:
+json-файл(ы), который(е) записал ваш скрипт:
+```json
+{"url": "google.com", "ip": ["142.250.190.71", "142.250.190.78", "142.250.191.206"]}
 ```
