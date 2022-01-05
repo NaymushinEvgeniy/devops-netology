@@ -91,11 +91,8 @@ for result in result_os.split('\n'):
 ```python
 #!/usr/bin/env python3
 
-import os
-import sys
 import socket
 
-data = []
 dict_data = {}
 urls = ["drive.google.com", "mail.google.com", "google.com"]
 # Вывод скрипта о текущей проверке
