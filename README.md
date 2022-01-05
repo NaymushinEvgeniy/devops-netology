@@ -95,55 +95,69 @@ import os
 import sys
 import socket
 
-url = sys.argv[1]
-ip = socket.gethostbyname(url)
-entry= 0
+data = []
+dict_data = {}
+urls = ["drive.google.com", "mail.google.com", "google.com"]
+# Формируем данные для организации структуры
+for url in urls:
+    ip = socket.gethostbyname(url)
+    print("Текущий IP проверки сервиса " + url + " - " + ip)
+    url = url + " "
+    dns_data = {url:ip}
+    data.append(dns_data)
 
-print("Текущий IP проверки сервиса " + url + " - " + ip)
-
-
-with open('bdn.txt', 'r+') as f:
-    data = f.readlines()
-    old_ips = ""
-
-    if len(data) == 0:
+# Если БД пустая - записываем сформированную структуру
+with open('bd.txt', 'r+') as f:
+    content = f.readlines()
+    if len(content) == 0:
         print("БД пустая, пишем")
-        f.write(url + " - " + ip + "\n")
+        for url in urls:
+            ip = socket.gethostbyname(url)
+            f.write(ip + "\n")
         exit()
 
-    for d in data:
-        find = d.find(ip)
-        entry += 1
-        old_ips += d
-
-        if find != -1:
-            print("Доступность сервиса " + url + " с ip " + ip + " прежняя")
-            break
-        elif entry == len(data): # or entry== 0:
-            print("Такого адреса нет в бд, записываю")
-            print("[ERROR] " + url + " IP mismatch: " + ip + "\nСтарые IP: \n" + old_ips)
-            f.write(url + " - " + ip + "\n")
+# Считываем данные, сверяем с актуальными
+with open('bd.txt', 'r') as f:
+    list_ip = f.readlines()
+    i = 0
+    j = 0
+    # Заполняем словарь старыми значениями IP из БД
+    for url in urls:
+        dict_data[url] = list_ip[i].replace("\n", "")
+        i += 1
+    # Проводим проверку с актуальными данными
+    for url in urls:
+        ip = socket.gethostbyname(url)
+        if dict_data[url] == ip :
+            print("IP адрес ресурса " + url + " не менялся, можно работать")
         else:
-            continue
-
+            print("IP адрес ресурса " + url + " изменился с " + dict_data[url] + " на " + ip + " записываем в БД")
+            list_ip[j] = ip + "\n"
+        j += 1
+# Обновляем БД
+with open('bd.txt', 'r+') as f:
+    for ip in list_ip:
+        f.write(ip)
 ```
 
 Вывод скрипта при запуске при тестировании:
 Если адрес изменился:
 ```python
-Текущий IP проверки сервиса google.com - 172.217.5.14
-Такого адреса нет в бд, записываю
-[ERROR] google.com IP mismatch: 172.217.5.14
-Старые IP: 
-google.com - 142.250.191.206
-google.com - 142.250.190.46
-google.com - 142.250.190.78
-google.com - 142.250.190.142
+Текущий IP проверки сервиса drive.google.com - 142.250.190.142
+Текущий IP проверки сервиса mail.google.com - 142.250.190.101
+Текущий IP проверки сервиса google.com - 142.250.190.78
+IP адрес ресурса drive.google.com изменился с 142.250.191.142 на 142.250.190.142 записываем в БД
+IP адрес ресурса mail.google.com изменился с 172.217.4.197 на 142.250.190.101 записываем в БД
+IP адрес ресурса google.com изменился с 142.250.191.206 на 142.250.190.78 записываем в БД
 ```
 
 
 Если адрес не менялся:
 ```python
-Текущий IP проверки сервиса google.com - 172.217.5.14
-Доступность сервиса google.com с ip 172.217.5.14 прежняя
+Текущий IP проверки сервиса drive.google.com - 142.250.191.142
+Текущий IP проверки сервиса mail.google.com - 172.217.4.197
+Текущий IP проверки сервиса google.com - 142.250.191.206
+IP адрес ресурса drive.google.com не менялся, можно работать
+IP адрес ресурса mail.google.com не менялся, можно работать
+IP адрес ресурса google.com не менялся, можно работать
 ```
