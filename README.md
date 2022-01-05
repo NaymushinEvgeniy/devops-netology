@@ -98,12 +98,10 @@ import socket
 data = []
 dict_data = {}
 urls = ["drive.google.com", "mail.google.com", "google.com"]
-# Формируем данные для организации структуры
+# Вывод скрипта о текущей проверке
 for url in urls:
     ip = socket.gethostbyname(url)
     print("Текущий IP проверки сервиса " + url + " - " + ip)
-    dns_data = {url:ip}
-    data.append(dns_data)
 
 # Если БД пустая - записываем сформированную структуру
 with open('bd.txt', 'r+') as f:
