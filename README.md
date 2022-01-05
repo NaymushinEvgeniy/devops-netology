@@ -102,7 +102,6 @@ urls = ["drive.google.com", "mail.google.com", "google.com"]
 for url in urls:
     ip = socket.gethostbyname(url)
     print("Текущий IP проверки сервиса " + url + " - " + ip)
-    url = url + " "
     dns_data = {url:ip}
     data.append(dns_data)
 
