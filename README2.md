@@ -100,7 +100,6 @@ with open("bd.json", "r") as f:
         find_in_json(ip, list_json)
     n_content = {} # Словарь под обновленные данные
     n_content["elements"] = content # Кладем обновленные данные обратно в обертку
-    print(n_content)
 
 # формируем обновленную структуру для YAML
 with open("bd.yaml", "r") as f:
