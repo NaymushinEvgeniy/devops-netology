@@ -41,17 +41,19 @@
 ```python
 #!/usr/bin/env python3
 
-import os
+#!/usr/bin/env python3
+
+#import os
 import sys
 import socket
 import json
+import yaml
+from yaml.loader import SafeLoader
 
-url = sys.argv[1]
-ip = socket.gethostbyname(url)
-ips = []
-
-# Формирование структуры JSON
-data = { "url" : url, "ip" : ips }
+urls = ["google.com", "drive.google.com", "mail.google.com"]
+main_list = [] # Список готовых объектов в формате URL -> Список готовых адресов
+json_data = { "elements" : main_list } # "Обертка" JSON-файла
+yaml_data = { "elements" : main_list }
 
 # Вспомогательная функция поиска в списке IP-адресов
 def find_in_json (set_ip, list_json):
@@ -60,32 +62,119 @@ def find_in_json (set_ip, list_json):
 
 # Работа скрипта
 
-print("Текущий IP проверки сервиса " + url + " - " + ip)
-
 # Проверяем наличие БД, если ее нет - создаем
-with open("bdn.json", "r+") as f:
+with open("bd.json", "r+") as f:
     content = f.readlines()
     if len(content) == 0:
-        json.dump(data, f)
+        for url in urls:
+            ips = [] # Список IP-адресов Хоста
+            data = {} # Словарь для JSON-структуры объекта
+            ip = socket.gethostbyname(url)
+            ips.append(ip)
+            data["url"] = url
+            data["ip"] = ips
+            main_list.append(data) # Заполнение информации по объекту
+        json.dump(json_data, f)
+        
+with open("bd.yaml", "r+") as f:
+    content = f.readlines()
+    if len(content) == 0:
+        for url in urls:
+            ips = [] # Список IP-адресов Хоста
+            data = {} # Словарь для JSON-структуры объекта
+            ip = socket.gethostbyname(url)
+            ips.append(ip)
+            data["url"] = url
+            data["ip"] = ips
+            main_list.append(data) # Заполнение информации по объекту
+        yaml.dump(yaml_data, f)
 
-# Считываем данные из текущей БД, проверяем на наличие
-with open("bdn.json", "r") as f:
+# Считываем данные из текущей БД, проверяем на наличие IP-адресов для хоста,
+# формируем обновленную структуру для JSON
+with open("bd.json", "r") as f:
     content = json.load(f)
-    list_json = content["ip"]
-    find_in_json(ip, list_json)
+    content = content["elements"] # Вытаскиваем данные из обертки
+    for i in content:
+        ip = socket.gethostbyname(i["url"])
+        list_json = i["ip"]
+        find_in_json(ip, list_json)
+    n_content = {} # Словарь под обновленные данные
+    n_content["elements"] = content # Кладем обновленные данные обратно в обертку
+    print(n_content)
+
+# формируем обновленную структуру для YAML
+with open("bd.yaml", "r") as f:
+    content = yaml.load(f, Loader=yaml.SafeLoader)
+    content = content["elements"] # Вытаскиваем данные из обертки
+    for i in content:
+        ip = socket.gethostbyname(i["url"])
+        list_json = i["ip"]
+        find_in_json(ip, list_json)
+    n_content = {} # Словарь под обновленные данные
+    n_content["elements"] = content # Кладем обновленные данные обратно в обертку
 
 # Записываем в БД все изменения
-with open('bdn.json', 'w') as f:
-    json.dump(content, f)
+with open('bd.json', 'w') as f:
+    json.dump(n_content, f)
+
+with open('bd.yaml', 'w') as f:
+    yaml.dump(n_content, f)
 
 ```
 Вывод скрипта при запуске при тестировании:
 
 ```python
-Текущий IP проверки сервиса google.com - 142.250.190.78
+Текущий проверяемый IP 172.217.5.14 для URL-a google.com
+Текущий проверяемый IP 172.217.4.46 для URL-a drive.google.com
+Текущий проверяемый IP 142.250.191.101 для URL-a mail.google.com
 ```
 
 json-файл(ы), который(е) записал ваш скрипт:
 ```json
-{"url": "google.com", "ip": ["142.250.190.71", "142.250.190.78", "142.250.191.206"]}
+{
+  "elements":
+  [
+    {
+      "ip": [
+        "142.250.190.46", 
+        "142.250.191.206", 
+        "172.217.5.14"], 
+      "url": "google.com"
+    }, 
+    {
+      "ip": [
+        "142.251.32.14",
+        "142.250.190.14",
+        "142.250.191.142",
+        "172.217.4.46"], 
+      "url": "drive.google.com"}, 
+    {
+      "ip": [
+        "142.250.191.101", 
+        "142.250.190.101", 
+        "142.250.190.5"], 
+      "url": "mail.google.com"
+    }
+  ]
+}
+```
+yml-файл(ы), который(е) записал ваш скрипт:
+```yaml
+elements:
+- ip:
+  - 142.250.190.46
+  - 142.250.191.206
+  - 172.217.5.14
+  url: google.com
+- ip:
+  - 142.251.32.14
+  - 142.250.190.14
+  - 142.250.191.142
+  - 172.217.4.46
+  url: drive.google.com
+- ip:
+  - 142.250.191.101
+  - 142.250.190.101
+  - 142.250.190.5
+  url: mail.google.com
 ```
