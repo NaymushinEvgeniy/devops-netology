@@ -32,27 +32,45 @@ SQL-запрос для выдачи списка пользователей с 
 Наполнение таблицы Orders
 
 insert into orders (name,price) values ('Шоколад', 10);
+
 INSERT 0 1
+
 insert into orders (name,price) values ('Принтер', 3000);
+
 INSERT 0 1
+
 insert into orders (name,price) values ('Книга', 500);
+
 INSERT 0 1
+
 insert into orders (name,price) values ('Монитор', 7000);
+
 INSERT 0 1
+
 insert into orders (name,price) values ('Гитара', 4000);
+
 INSERT 0 1
 
 Наполнение таблицы Clients
 
 insert into clients (family,country)  values ('Иванов Иван Иванович','USA');
+
 INSERT 0 1
+
 insert into clients (family,country)  values ('Петров Петр Петрович','Canada');
+
 INSERT 0 1
+
 insert into clients (family,country)  values ('Иоганн Себастьян Бах','Japan');
+
 INSERT 0 1
+
 insert into clients (family,country)  values ('Ронни Джеймс Дио','Russia');
+
 INSERT 0 1
+
 insert into clients (family,country)  values ('Ritchie Blackmore','Russia');
+
 INSERT 0 1
 
 Количество записей в таблице Clients:
@@ -77,14 +95,20 @@ ALTER TABLE clients ADD CONSTRAINT orders_id FOREIGN KEY (id) REFERENCES orders(
 Заполняем ID заказов для клиентов:
 
 UPDATE clients set orders_id='3' WHERE id=1;
+
 UPDATE 1
+
 UPDATE clients set orders_id='4' WHERE id=2;
+
 UPDATE 1
+
 UPDATE clients set orders_id='5' WHERE id=3;
+
 UPDATE 1
 
 Вывод исходного запроса:
 select family,name from clients INNER JOIN orders ON clients.orders_id=orders.id;
+
         family        |  name
 ----------------------+---------
  Иванов Иван Иванович | Книга
@@ -95,6 +119,7 @@ select family,name from clients INNER JOIN orders ON clients.orders_id=orders.id
 Приведите SQL-запрос для выдачи всех пользователей, которые совершили заказ, а также вывод данного запроса:
 
 select family from clients where orders_id is not null;
+
         family
 ----------------------
  Иванов Иван Иванович
@@ -105,6 +130,7 @@ select family from clients where orders_id is not null;
 ### Задача 5
 
  EXPLAIN select family from clients where orders_id is not null;
+
                        QUERY PLAN
 --------------------------------------------------------
  Seq Scan on clients  (cost=0.00..1.05 rows=5 width=32)
