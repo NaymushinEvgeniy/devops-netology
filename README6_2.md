@@ -77,7 +77,6 @@ INSERT 0 1
 
 select (count(*)) from clients;
  count
--------
      5
 (1 row)
 
@@ -85,7 +84,6 @@ select (count(*)) from clients;
 
 select (count(*)) from orders;
  count
--------
      5
 (1 row)
 
