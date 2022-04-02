@@ -11,6 +11,22 @@ docker run -d --name netology-postgres -e POSTGRES_PASSWORD=secret -e PGDATA=/va
 
 ### Задача 2
 
+Итоговый список БД после выполнения пунктов:
+
+![](https://i.ibb.co/zV0PW8r/dz6-1-2-1.png)
+
+Описание таблиц (describe):
+
+![](https://i.ibb.co/yybtHfF/dz6-1-2-2.png)
+
+SQL-запрос для выдачи списка пользователей с правами над таблицами test_db
+
+![](https://i.ibb.co/3z53xs1/dz6-1-2-3.png)
+
+Список пользователей с правами над таблицами test_db
+
+![](https://i.ibb.co/Jkw5kvy/dz6-1-2-4.png)
+
 ### Задача 3
 
 Наполнение таблицы Orders
