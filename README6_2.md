@@ -74,6 +74,7 @@ insert into clients (family,country)  values ('Ritchie Blackmore','Russia');
 INSERT 0 1
 
 Количество записей в таблице Clients:
+
 select (count(*)) from clients;
  count
 -------
@@ -81,6 +82,7 @@ select (count(*)) from clients;
 (1 row)
 
 Количество записей в таблице Orders:
+
 select (count(*)) from orders;
  count
 -------
