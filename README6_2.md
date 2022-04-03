@@ -129,7 +129,7 @@ SQL-запрос для выдачи списка пользователей с 
 
 ### Задача 5
 
- EXPLAIN select family from clients where orders_id is not null;
+    EXPLAIN select family from clients where orders_id is not null;
 
                        QUERY PLAN
     --------------------------------------------------------
