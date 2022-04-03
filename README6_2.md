@@ -6,7 +6,7 @@
 
 Приведите получившуюся команду или docker-compose манифест.
 
-docker run -d --name netology-postgres -e POSTGRES_PASSWORD=secret -e PGDATA=/var/lib/postgresql/data/pgdata -v bd_netology:/var/lib/postgresql/data -v backups_netology:/mnt/backups -p 5432:5432 postgres
+    docker run -d --name netology-postgres -e POSTGRES_PASSWORD=secret -e PGDATA=/var/lib/postgresql/data/pgdata -v bd_netology:/var/lib/postgresql/data -v backups_netology:/mnt/backups -p 5432:5432 postgres
 
 
 ### Задача 2
