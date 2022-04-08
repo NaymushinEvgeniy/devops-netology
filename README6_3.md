@@ -32,3 +32,60 @@
             
         |  2 | My little pony |   500 |
 
+### Задача 2
+
+    CREATE USER 'test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'test-pass';
+    ALTER USER 'test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'test-pass' PASSWORD EXPIRE INTERVAL 180 DAY FAILED_LOGIN_ATTEMPTS 3 PASSWORD_LOCK_TIME 100;
+    ALTER USER 'test'@'localhost' ATTRIBUTE '{"family":"Pretty","name":"James"}';
+
+    REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'test'@'localhost';
+    GRANT SELECT ON test_db.* TO 'test'@'localhost';
+
+    mysql> SHOW GRANTS FOR 'test'@'localhost';
+    +------------------------------------------+
+    | Grants for test@localhost                |
+    +------------------------------------------+
+    | GRANT USAGE ON *.* TO `test`@`localhost` |
+    +------------------------------------------+
+    1 row in set (0.00 sec)
+
+Используя таблицу INFORMATION_SCHEMA.USER_ATTRIBUTES получите данные по пользователю test и приведите в ответе к задаче:
+
+    mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE user='test';
+    +------+-----------+---------------------------------------+
+    | USER | HOST      | ATTRIBUTE                             |
+    +------+-----------+---------------------------------------+
+    | test | localhost | {"name": "James", "family": "Pretty"} |
+    +------+-----------+---------------------------------------+
+    1 row in set (0.00 sec)
+
+### Задача 3
+
+    mysql> SELECT TABLE_NAME, ENGINE FROM information_schema.TABLES WHERE TABLE_SCHEMA='test_db';
+    +------------+--------+
+    | TABLE_NAME | ENGINE |
+    +------------+--------+
+    | orders     | InnoDB |
+    +------------+--------+
+    1 row in set (0.00 sec)
+
+Измените engine и приведите время выполнения и запрос на изменения из профайлера в ответе:
+    
+    ALTER TABLE orders ENGINE=MyISAM;
+     SHOW PROFILES;
+    +----------+------------+---------------------------------------------------------------------------------------+
+    | Query_ID | Duration   | Query                                                                                 |
+    +----------+------------+---------------------------------------------------------------------------------------+
+    |       1 | 0.25268150 | ALTER TABLE orders ENGINE=MyISAM                                                      |
+    +----------+------------+---------------------------------------------------------------------------------------+
+    
+    ALTER TABLE orders ENGINE=InnoDB;
+    mysql> SHOW PROFILES;
+    +----------+------------+---------------------------------------------------------------------------------------+
+    | Query_ID | Duration   | Query                                                                                 |
+    +----------+------------+---------------------------------------------------------------------------------------+
+    |       1  | 0.25268150 | ALTER TABLE orders ENGINE=MyISAM                                                      |
+    |       2  | 0.24371925 | ALTER TABLE orders ENGINE=InnoDB                                                      |
+    +----------+------------+---------------------------------------------------------------------------------------+
+
+### Задача 4
