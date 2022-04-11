@@ -89,3 +89,28 @@
     +----------+------------+---------------------------------------------------------------------------------------+
 
 ### Задача 4
+Изучите файл my.cnf в директории /etc/mysql.
+Измените его согласно ТЗ 
+
+    [mysqld]
+    pid-file        = /var/run/mysqld/mysqld.pid
+    socket          = /var/run/mysqld/mysqld.sock
+    datadir         = /var/lib/mysql
+    secure-file-priv= NULL
+    
+    # Netology DZ 6.3.4
+    # I/O priority
+    
+    innodb_flush_log_at_trx_commit = 2
+    
+    # Compression
+    innodb_file_per_table = 1
+    
+    # Buffer with uncommit transations
+    innodb_log_buffer_size = 1048576
+    
+    # Buffer for cash funcitons (exampler RAM=12 Gb)
+    innodb_buffer_pool_size = 4G
+    
+    # Size of file with log operations (example total_disk_space = 100Gb)
+    innodb_log_file_size = 50G
