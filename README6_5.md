@@ -156,6 +156,16 @@
 
 ### Задача 3 
 
+Создайте директорию {путь до корневой директории с elasticsearch в образе}/snapshots
+
+    PUT https://elc:9200/_snapshot/netology-backup
+    {
+      "type": "fs",
+      "settings": {
+        "location": "/mnt/snapshots"
+      }
+    }
+
 Приведите в ответе запрос API и результат вызова API для создания репозитория:
 
     PUT https://127.0.0.1:9200/_snapshot/netology_backup
