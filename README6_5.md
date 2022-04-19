@@ -153,3 +153,53 @@
         }
 
 Кластер находится в состояние yelow поскольку мы имеем только одну ноду
+
+### Задача 3 
+
+Приведите в ответе запрос API и результат вызова API для создания репозитория:
+
+    PUT https://127.0.0.1:9200/_snapshot/netology_backup
+    {
+      "type": "fs",
+      "settings": {
+        "location": "/mnt/snapshots"
+      }
+    }
+
+Результат:
+
+    {
+        "acknowledged": true
+    }
+
+Создайте индекс test с 0 реплик и 1 шардом и приведите в ответе список индексов.
+
+    GET https://127.0.0.1:9200/_all
+
+    {
+        "test": {
+            "aliases": {},
+            "mappings": {},
+            "settings": {
+                "index": {
+                    "routing": {
+                        "allocation": {
+                            "include": {
+                                "_tier_preference": "data_content"
+                            }
+                        }
+                    },
+                    "number_of_shards": "1",
+                    "provided_name": "test",
+                    "creation_date": "1650314610882",
+                    "number_of_replicas": "0",
+                    "uuid": "6JLarqlsTaCcszJXKlHrvg",
+                    "version": {
+                        "created": "8010299"
+                    }
+                }
+            }
+        }
+    }
+
+Приведите в ответе список файлов в директории со snapshotами:
