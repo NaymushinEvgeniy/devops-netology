@@ -16,3 +16,5 @@
 2. Выполним остановку запроса:
 
         db.killOp("shardName:opid on that shard>")
+
+### Задача 2
