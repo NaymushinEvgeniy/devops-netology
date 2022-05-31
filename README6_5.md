@@ -156,9 +156,9 @@
 
 ### Задача 3 
 
-Приведите в ответе запрос API и результат вызова API для создания репозитория:
+Создайте директорию {путь до корневой директории с elasticsearch в образе}/snapshots
 
-    PUT https://127.0.0.1:9200/_snapshot/netology_backup
+    PUT https://127.0.0.1:9200/_snapshot/netology-backup
     {
       "type": "fs",
       "settings": {
@@ -202,4 +202,144 @@
         }
     }
 
+Создайте snapshot состояния кластера elasticsearch.
+
+    PUT https://127.0.0.1:9200/_snapshot/netology-backup/backup_elc
+
 Приведите в ответе список файлов в директории со snapshotами:
+
+        GET https://127.0.0.1:9200/_snapshot/netology-backup/_all
+        {
+            "snapshots": [
+                {
+                    "snapshot": "backup_elc",
+                    "uuid": "BYkh9tVNRTGfohNO7pi3qA",
+                    "repository": "netology-backup",
+                    "version_id": 8010299,
+                    "version": "8.1.2",
+                    "indices": [
+                        ".security-7",
+                        ".geoip_databases",
+                        "test"
+                    ],
+                    "data_streams": [],
+                    "include_global_state": true,
+                    "state": "SUCCESS",
+                    "start_time": "2022-04-19T10:54:39.188Z",
+                    "start_time_in_millis": 1650365679188,
+                    "end_time": "2022-04-19T10:54:41.390Z",
+                    "end_time_in_millis": 1650365681390,
+                    "duration_in_millis": 2202,
+                    "failures": [],
+                    "shards": {
+                        "total": 3,
+                        "failed": 0,
+                        "successful": 3
+                    },
+                    "feature_states": [
+                        {
+                            "feature_name": "geoip",
+                            "indices": [
+                                ".geoip_databases"
+                            ]
+                        },
+                        {
+                            "feature_name": "security",
+                            "indices": [
+                                ".security-7"
+                            ]
+                        }
+                    ]
+                }
+            ],
+            "total": 1,
+            "remaining": 0
+        }
+
+Удалите индекс test и создайте индекс test-2. Приведите в ответе список индексов.
+
+        DELETE https://127.0.0.1:9200/test
+        PUT https://127.0.0.1:9200/test-2
+        GET https://127.0.0.1:9200/_all
+        
+        {
+            "test-2": {
+                "aliases": {},
+                "mappings": {},
+                "settings": {
+                    "index": {
+                        "routing": {
+                            "allocation": {
+                                "include": {
+                                    "_tier_preference": "data_content"
+                                }
+                            }
+                        },
+                        "number_of_shards": "1",
+                        "provided_name": "test-2",
+                        "creation_date": "1650366151633",
+                        "number_of_replicas": "0",
+                        "uuid": "7FdXBiuKSU6bACewWZeVwg",
+                        "version": {
+                            "created": "8010299"
+                        }
+                    }
+                }
+            }
+        }
+
+Восстановите состояние кластера elasticsearch из snapshot, созданного ранее.
+Приведите в ответе запрос к API восстановления и итоговый список индексов.
+
+        POST https://127.0.0.1:9200/_snapshot/netology-backup/backup_elc/_restore
+        GET https://127.0.0.1:9200/_all
+        
+        {
+            "test": {
+                "aliases": {},
+                "mappings": {},
+                "settings": {
+                    "index": {
+                        "routing": {
+                            "allocation": {
+                                "include": {
+                                    "_tier_preference": "data_content"
+                                }
+                            }
+                        },
+                        "number_of_shards": "1",
+                        "provided_name": "test",
+                        "creation_date": "1650364570001",
+                        "number_of_replicas": "0",
+                        "uuid": "ugX4-wEbTnOxRtfjGmM1yQ",
+                        "version": {
+                            "created": "8010299"
+                        }
+                    }
+                }
+            },
+            "test-2": {
+                "aliases": {},
+                "mappings": {},
+                "settings": {
+                    "index": {
+                        "routing": {
+                            "allocation": {
+                                "include": {
+                                    "_tier_preference": "data_content"
+                                }
+                            }
+                        },
+                        "number_of_shards": "1",
+                        "provided_name": "test-2",
+                        "creation_date": "1650366151633",
+                        "number_of_replicas": "0",
+                        "uuid": "7FdXBiuKSU6bACewWZeVwg",
+                        "version": {
+                            "created": "8010299"
+                        }
+                    }
+                }
+            }
+        }
+
