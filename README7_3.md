@@ -122,8 +122,8 @@
         }
     }
 
-  # aws_instance.test[1] will be created
-  + resource "aws_instance" "test" {
+      aws_instance.test[1] will be created
+      + resource "aws_instance" "test" {
       + ami                                  = "ami-0e2ebbe667ece3066"
       + arn                                  = (known after apply)
       + associate_public_ip_address          = (known after apply)
@@ -232,8 +232,8 @@
         }
     }
 
-  # aws_instance.test2["t3.large"] will be created
-  + resource "aws_instance" "test2" {
+       aws_instance.test2["t3.large"] will be created
+      + resource "aws_instance" "test2" {
       + ami                                  = "ami-000b6b680d7ea2d9a"
       + arn                                  = (known after apply)
       + associate_public_ip_address          = (known after apply)
@@ -342,8 +342,8 @@
         }
     }
 
-  # aws_instance.test2["t3.micro"] will be created
-  + resource "aws_instance" "test2" {
+      # aws_instance.test2["t3.micro"] will be created
+      + resource "aws_instance" "test2" {
       + ami                                  = "ami-000b6b680d7ea2d9a"
       + arn                                  = (known after apply)
       + associate_public_ip_address          = (known after apply)
@@ -450,7 +450,7 @@
           + volume_size           = (known after apply)
           + volume_type           = (known after apply)
         }
-    }
+      }
 
-Plan: 4 to add, 0 to change, 0 to destroy.
+      Plan: 4 to add, 0 to change, 0 to destroy.
     
