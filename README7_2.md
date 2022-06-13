@@ -154,3 +154,5 @@
 
 Ссылка на репозиторий с исходной конфигурацией терраформа:
 
+https://github.com/NaymushinEvgeniy/devops-netology/tree/main/terraform
+
