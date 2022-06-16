@@ -22,10 +22,22 @@ https://github.com/hashicorp/terraform-provider-aws/blob/main/internal/provider/
 
 - С каким другим параметром конфликтует name? Приложите строчку кода, в которой это указано:
 
-        
+        82 "name": {
+            ...
+            ConflictsWith: []string{"name_prefix"},
 
+  https://github.com/hashicorp/terraform-provider-aws/blob/1b898de12d612ab76eeab0580b29252b004d6392/internal/service/sqs/queue.go#L169
+ 
 - Какая максимальная длина имени?
 
     127 символов
 
-    58: ValidateFunc: validation.StringLenBetween(1, 127),
+        58: ValidateFunc: validation.StringLenBetween(1, 127),
+
+  https://github.com/hashicorp/terraform-provider-aws/blob/1b898de12d612ab76eeab0580b29252b004d6392/internal/service/connect/queue.go#L20
+
+- Какому регулярному выражению должно подчиняться имя?
+
+        name = create.NameWithSuffix(d.Get("name").(string), d.Get("name_prefix").(string), FIFOQueueNameSuffix)
+
+  https://github.com/hashicorp/terraform-provider-aws/blob/1b898de12d612ab76eeab0580b29252b004d6392/internal/service/sqs/queue.go#L169
