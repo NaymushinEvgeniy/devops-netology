@@ -15,3 +15,17 @@ server.yaml
           steps:
           - plan:
               extra_args: ["-lock", "false"]
+
+atlantis.yaml
+
+    version: 3
+    workflows: {stage,prod}
+    projects:
+    - dir: .
+      workspace: stage
+      autoplan:
+        when_modified: ["*.tf"]
+    - dir: .
+      workspace: prod
+      autoplan:
+        when_modified: ["*.tf"]
