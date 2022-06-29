@@ -29,3 +29,8 @@ atlantis.yaml
       workspace: prod
       autoplan:
         when_modified: ["*.tf"]
+
+### Задача 3. Знакомство с каталогом модулей.
+
+Cсылка на созданный блок конфигураций:
+https://github.com/NaymushinEvgeniy/devops-netology/tree/main/terraform
