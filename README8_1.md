@@ -4,4 +4,6 @@
 
 В ответе отправьте ссылку на ваш открытый репозиторий с изменённым playbook и заполненным README.md.
 
+https://github.com/NaymushinEvgeniy/ansible-netology
+
 https://github.com/NaymushinEvgeniy/ansible-netology/blob/main/playbook/README.md
